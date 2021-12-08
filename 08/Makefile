@@ -1,7 +1,4 @@
-all: run_test run
-
-run_test:
+all:
+	cat input_0 | ./puzzle.py
 	cat input_test | ./puzzle.py
-
-run:
 	cat input | ./puzzle.py
