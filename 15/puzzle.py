@@ -2,14 +2,16 @@
 
 from util import *
 from board import Board, P
-from heapq import heappush, heappop
+from queue import PriorityQueue
 
 map = Board()
 for y, l in enumerate(inputs()):
   for x, v in enumerate(l):
     map.set(x, y, int(v))
 
-# Straight from https://en.wikipedia.org/wiki/A*_search_algorithm
+
+# (Almost) straight from https://en.wikipedia.org/wiki/A*_search_algorithm
+# and https://www.redblobgames.com/pathfinding/a-star/implementation.html
 def reconstruct_path(cameFrom, current):
   total_path = [current]
   while current in cameFrom:
@@ -20,39 +22,27 @@ def heuristic(p1, p2):
   # Best case all 1 cost in a straight line
   return abs(p1.x-p2.x) + abs(p1.y-p2.y)
 def a_star(start, goal, h):
-  openSet = set()
-  openSet.add(start)
-  cameFrom = {}
+  frontier = PriorityQueue()
+  frontier.put((0, start))
+  came_from = {}
 
-  # For node n, gScore[n] is the cost of the cheapest path from start to n currently known.
-  gScore = {} # map with default value of Infinity
-  gScore[start] = 0
+  cost_so_far = {}
+  cost_so_far[start] = 0
 
-  # For node n, fScore[n] := gScore[n] + h(n). fScore[n] represents our current best guess as to
-  # how short a path from start to finish can be if it goes through n.
-  fScore = {} # map with default value of Infinity
-  fScore[start] = h(start, goal)
-
-  while openSet:
-    # This operation can occur in O(1) time if openSet is a min-heap or a priority queue
-    current = min(openSet, key=lambda n: fScore[n]) # the node in openSet having the lowest fScore[] value
+  while not frontier.empty():
+    current = frontier.get()[1]
     if current == goal:
-      return reconstruct_path(cameFrom, current)
+      return reconstruct_path(came_from, current)
 
-    openSet.remove(current)
     for neighbor in map.neighbors4(current):
-      # d(current,neighbor) is the weight of the edge from current to neighbor
-      # tentative_gScore is the distance from start to the neighbor through current
-      tentative_gScore = gScore[current] + map.get(neighbor.x, neighbor.y)
-      if not neighbor in gScore or tentative_gScore < gScore[neighbor]:
-        # This path to neighbor is better than any previous one. Record it!
-        cameFrom[neighbor] = current
-        gScore[neighbor] = tentative_gScore
-        fScore[neighbor] = tentative_gScore + h(neighbor, goal)
-        if not neighbor in openSet:
-          openSet.add(neighbor)
+      new_score = cost_so_far[current] + map.get(neighbor.x, neighbor.y)
+      if not neighbor in cost_so_far or new_score < cost_so_far[neighbor]:
+        came_from[neighbor] = current
+        cost_so_far[neighbor] = new_score
+        prio = new_score + h(neighbor, goal)
+        frontier.put((prio, neighbor))
 
-  # Open set is empty but goal was never reached
+  # No nodes left to consider but goal was never reached
   return None
 
 def score(path):
