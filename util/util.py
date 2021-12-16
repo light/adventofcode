@@ -4,8 +4,8 @@ import sys
 import re
 
 def print_res(msg, val, exp_arg):
-  expected = int(sys.argv[exp_arg]) if len(sys.argv) > exp_arg else None
-  if expected:
+  expected = int(sys.argv[exp_arg]) if len(sys.argv) > exp_arg and sys.argv[exp_arg] != "_" else None
+  if expected is not None:
     okko = "\033[92mOK!\033[0m" if val == expected else f"\033[91mKO!\033[0m (expected {expected})"
     print(msg, val, okko)
   else:
