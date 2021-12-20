@@ -126,16 +126,6 @@ def search_match(coords_a, coords_b, min_match):
     raise Exception("More than one orientation found, don't know what to do ! :-(")
   return matches[0] if matches else None
 
-"""
-a = [[0,2,0],[4,1,0],[3,3,0],[7,0,0],[8,0,0]]
-b = [[-1,-1,1],[-5,0,1],[-2,1,1]]
-c = [rotate(v, 1, 0, 0) for v in b]
-print(b)
-print(c)
-print([rotate(v, 3, 0, 0) for v in c])
-print(find_match_offset(a, b, 3))
-print(search_match(a, c, 3))
-"""
 
 offsets = {0:([0,0,0], [0,0,0])}
 previous_found = [0]
@@ -156,12 +146,20 @@ while len(offsets) != len(scanners):
   previous_found = found
 print(offsets)
 
-
 unique_coords = set()
 for i in offsets:
   rot, off = offsets[i]
   for c in scanners[i]:
     unique_coords.add(tuple(vadd(c, off)))
 
-print_res("Part one", len(unique_coords), 1)
+max_dist = 0
+for i in range(len(scanners)):
+  for j in range(len(scanners)):
+    if i != j:
+      o1 = offsets[i][1]
+      o2 = offsets[j][1]
+      dist = abs(o1[0]-o2[0])+abs(o1[1]-o2[1])+abs(o1[2]-o2[2])
+      max_dist = max(dist, max_dist)
 
+print_res("Part one", len(unique_coords), 1)
+print_res("Part two", max_dist, 2)
