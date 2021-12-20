@@ -13,12 +13,13 @@ class Board :
     self.ø = ø
     self.w = self.h = 0
   def extend(self, w, h):
-    if w > self.w:
-      self.board = [l + [self.ø]*(w-self.w) for l in self.board]
-      self.w = w
-    if h > self.h:
-      self.board = self.board + [[self.ø]*self.w for i in range(h-self.h)]
-      self.h = h
+    if w > self.w or h > self.h:
+      self.extend_shift(right = max(w-self.w, 0), bottom = max(h-self.h, 0))
+  def extend_shift(self, left=0, top=0, right=0, bottom=0):
+    self.board = [[self.ø]*left + l + [self.ø]*(right) for l in self.board]
+    self.w += left + right
+    self.board = [[self.ø]*self.w for i in range(top)] + self.board + [[self.ø]*self.w for i in range(bottom)]
+    self.h += top + bottom
   def set(self, x, y, val):
     self.extend(x+1, y+1)
     self.board[y][x] = val
@@ -41,4 +42,9 @@ class Board :
       n.append(self.getP(p.x, p.y-1))
     if p.y != self.h-1:
       n.append(self.getP(p.x, p.y+1))
+    return n
+  def copy(self):
+    n = Board()
+    n.board = [[v for v in l] for l in self.board]
+    n.ø = self.ø; n.w = self.w; n.h = self.h
     return n
