@@ -5,6 +5,12 @@ from queue import PriorityQueue
 # Generalized A* pathfinding
 # Largely from https://en.wikipedia.org/wiki/A*_search_algorithm
 # and https://www.redblobgames.com/pathfinding/a-star/implementation.html
+# Arguments :
+#  start : start node of the graph to explore
+#  neighbors_with_cost : function of (node) -> list of (neighbor, cost)
+#  goal_condition : function of (node) -> boolean if goal is reached
+#  heuristic : function of (node) -> cost to goal estimate, must always be <= actual cost
+#              otherwise a non-optimal path might be found. Use constant 0 if unknown.
 def a_star(start, neighbors_with_cost, goal_condition, heuristic):
   frontier = PriorityQueue()
   frontier.put((0, start))
