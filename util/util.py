@@ -21,4 +21,4 @@ class ins(str):
     return int(self.str(idx))
 def inputs():
   for l in sys.stdin:
-    yield ins(l.strip())
+    yield ins(l.rstrip())
