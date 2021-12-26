@@ -48,3 +48,5 @@ class Board :
     n.board = [[v for v in l] for l in self.board]
     n.ø = self.ø; n.w = self.w; n.h = self.h
     return n
+  def __eq__(s, o):
+    return isinstance(o, s.__class__) and s.ø == o.ø and s.board == o.board
