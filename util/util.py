@@ -22,3 +22,7 @@ class ins(str):
 def inputs():
   for l in sys.stdin:
     yield ins(l.rstrip())
+def input_file(filename):
+  with open(filename) as f:
+    for l in f.readlines():
+      yield ins(l.rstrip())

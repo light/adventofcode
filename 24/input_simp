@@ -1,0 +1,46 @@
+z = readinp() + 6
+z *= 26
+z += readinp() + 12
+z *= 26
+z += readinp() + 5
+x = readinp() - 6
+inp w
+if x != w:
+  z *= 26
+  z += w + 7
+z *= 26
+z += readinp()
+x = readinp()
+inp w
+if x != w:
+  z *= 26
+  z += w + 12
+x = readinp() + 7
+inp w
+if x != w:
+  z *= 26
+  z += w + 13
+inp w
+x = z % 26 - 8
+z //= 26
+if x != w:
+  z *= 26
+  z += w + 10
+inp w
+x = z % 26 - 4
+z //= 26
+if x != w:
+  z *= 26
+  z += w + 11
+inp w
+x = z % 26 - 15
+z //= 26
+if x != w:
+  z *= 26
+  z += w + 9
+inp w
+x = z % 26 - 8
+z //= 26
+if x != w:
+  z *= 26
+  z += w + 9
