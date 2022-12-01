@@ -11,6 +11,12 @@ def print_res(msg, val, exp_arg):
   else:
     print(msg, val)
 
+# Convenience class to cut a line of text into parts
+# Cut on regexp match :
+#   a = ins("AB = 12")
+#   a.match('(.) = (.)')
+#   left = a.str(1)
+#   right = a.int(2)
 class ins(str):
   def match(self, regex):
     self.__match = re.match(regex, self)
@@ -19,6 +25,8 @@ class ins(str):
     return self.__match.group(idx)
   def int(self, idx):
     return int(self.str(idx))
+
+# Yields an instruction for each line of stdint
 def inputs():
   for l in sys.stdin:
     yield ins(l.rstrip())
