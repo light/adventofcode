@@ -1,4 +1,4 @@
-#!/usr/bin/env -S PYTHONPATH=../util python3
+#!/usr/bin/env -S PYTHONPATH=../../util python3
 
 from util import *
 from collections import namedtuple

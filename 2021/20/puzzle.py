@@ -1,4 +1,4 @@
-#!/usr/bin/env -S PYTHONPATH=../util pypy3
+#!/usr/bin/env -S PYTHONPATH=../../util pypy3
 
 from util import *
 from board import Board
