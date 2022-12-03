@@ -7,9 +7,7 @@ def p(c):
   v = ord(c)
   return v-64+26 if v < 97 else v-96
 def common(*a):
-  c = set(a[0])
-  for b in a[1:]:
-    c = c.intersection(set(b))
+  c = set.intersection(*[set(b) for b in a])
   return c.pop()
 
 score1 = 0
@@ -20,8 +18,7 @@ for l in inputs():
   score1 += p(common(a, b))
   group.append(l)
   if len(group) == 3:
-    c = common(common(group[0], group[1], group[2]))
-    score2 += p(c)
+    score2 += p(common(group[0], group[1], group[2]))
     group = []
 
 print_res("Part one:", score1, 1)
