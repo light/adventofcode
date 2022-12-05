@@ -4,9 +4,9 @@ import sys
 import re
 
 def print_res(msg, val, exp_arg):
-  expected = int(sys.argv[exp_arg]) if len(sys.argv) > exp_arg and sys.argv[exp_arg] != "_" else None
+  expected = sys.argv[exp_arg] if len(sys.argv) > exp_arg and sys.argv[exp_arg] != "_" else None
   if expected is not None:
-    okko = "\033[92mOK!\033[0m" if val == expected else f"\033[91mKO!\033[0m (expected {expected})"
+    okko = "\033[92mOK!\033[0m" if str(val) == expected else f"\033[91mKO!\033[0m (expected {expected})"
     print(msg, val, okko)
   else:
     print(msg, val)
@@ -34,3 +34,19 @@ def input_file(filename):
   with open(filename) as f:
     for l in f.readlines():
       yield ins(l.rstrip())
+
+
+class DynArray:
+  def __init__(self, newItem):
+    self.a = []
+    self.newItem = newItem
+  def __len__(self):
+    return len(self.a)
+  def __getitem__(self, i):
+    while len(self.a) <= i:
+      self.a.append(self.newItem())
+    return self.a[i]
+  def __str__(self):
+    return str(self.a)
+  def __iter__(self):
+    return self.a.__iter__()
