@@ -2,6 +2,7 @@
 
 import sys
 import re
+import copy
 
 def print_res(msg, val, exp_arg):
   expected = sys.argv[exp_arg] if len(sys.argv) > exp_arg and sys.argv[exp_arg] != "_" else None
@@ -50,3 +51,7 @@ class DynArray:
     return str(self.a)
   def __iter__(self):
     return self.a.__iter__()
+  def copy(self):
+    c = DynArray(self.newItem)
+    c.a = copy.deepcopy(self.a)
+    return c

@@ -13,11 +13,16 @@ for l in inputs():
   if len(l) == 0:
     break
 
+stacks2 = stacks.copy()
 for l in inputs():
   l.match('move (\d+) from (\d+) to (\d+)')
-  for i in range(l.int(1)):
+  n = l.int(1)
+  for i in range(n):
     stacks[l.int(3)-1].append(stacks[l.int(2)-1].pop())
+    stacks2[l.int(3)-1].append(stacks2[l.int(2)-1].pop(len(stacks2[l.int(2)-1])-n+i))
 
-tops = "".join([s.pop() for s in stacks])
+def tops(stacks):
+  return "".join([s[-1] for s in stacks])
 
-print_res("Part one:", tops, 1)
+print_res("Part one:", tops(stacks), 1)
+print_res("Part two:", tops(stacks2), 2)
