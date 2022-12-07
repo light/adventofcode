@@ -24,13 +24,21 @@ for l in inputs():
       d["size"] += l.int(1)
       d = d["parent"]
 
-def walk(cwd, fun, acc=0):
+def walk(cwd, fun, acc=None):
   if cwd is None:
     return acc
-  acc += fun(cwd)
+  acc = fun(acc, cwd)
   for dir in cwd["dirs"].values():
-    acc += walk(dir, fun)
+    acc = walk(dir, fun, acc)
   return acc
 
-size = walk(root, lambda dir: dir["size"] if dir["size"] <= 100000 else 0)
-print_res("Part one:", size, 1)
+size_less_than_10k = walk(root, lambda sum, dir: sum+dir["size"] if dir["size"] <= 100000 else sum, 0)
+print_res("Part one:", size_less_than_10k, 1)
+
+TOTAL_SIZE = 70000000
+SPACE_NEEDED = 30000000
+space_left = TOTAL_SIZE - root["size"]
+to_delete = SPACE_NEEDED - space_left
+dir_to_delete = walk(root, lambda best, dir: dir if dir["size"] >= to_delete and dir["size"] < best["size"] else best, root)
+
+print_res("Part two:", dir_to_delete["size"], 2)
