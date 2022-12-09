@@ -16,9 +16,9 @@ class Board :
     if w > self.w or h > self.h:
       self.extend_shift(right = max(w-self.w, 0), bottom = max(h-self.h, 0))
   def extend_shift(self, left=0, top=0, right=0, bottom=0):
-    self.board = [[self.ø]*left + l + [self.ø]*(right) for l in self.board]
+    self.board = [self._null_items(left) + l + self._null_items(right) for l in self.board]
     self.w += left + right
-    self.board = [[self.ø]*self.w for i in range(top)] + self.board + [[self.ø]*self.w for i in range(bottom)]
+    self.board = [self._null_items(self.w) for i in range(top)] + self.board + [self._null_items(self.w) for i in range(bottom)]
     self.h += top + bottom
   def set(self, x, y, val):
     self.extend(x+1, y+1)
@@ -48,5 +48,7 @@ class Board :
     n.board = [[v for v in l] for l in self.board]
     n.ø = self.ø; n.w = self.w; n.h = self.h
     return n
+  def _null_items(self, n):
+    return [self.ø() for i in range(n)] if callable(self.ø) else [self.ø]*n
   def __eq__(s, o):
     return isinstance(o, s.__class__) and s.ø == o.ø and s.board == o.board
