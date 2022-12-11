@@ -11,30 +11,33 @@ class Board :
   def __init__(self, ø=0):
     self.board = []
     self.ø = ø
+    self.x0 = self.y0 = 0
     self.w = self.h = 0
   def extend(self, w, h):
-    if w > self.w or h > self.h:
-      self.extend_shift(right = max(w-self.w, 0), bottom = max(h-self.h, 0))
-  def extend_shift(self, left=0, top=0, right=0, bottom=0):
+    self.extend_shift(right = max(w-self.w, 0), top = max(h-self.h, 0))
+  def extend_shift(self, left=0, bottom=0, right=0, top=0):
+    if left == 0 and bottom == 0 and right == 0 and top == 0:
+      return
     self.board = [self._null_items(left) + l + self._null_items(right) for l in self.board]
     self.w += left + right
-    self.board = [self._null_items(self.w) for i in range(top)] + self.board + [self._null_items(self.w) for i in range(bottom)]
+    self.board = [self._null_items(self.w) for i in range(bottom)] + self.board + [self._null_items(self.w) for i in range(top)]
     self.h += top + bottom
+  def shift(self, dx, dy):
+    self.x0 += dx; self.y0 += dy
   def set(self, x, y, val):
-    if x < 0 or y < 0:
-      raise IndexError(f"{x},{y} out of bounds (0,0)-({self.w},{self.h})")
-    self.extend(x+1, y+1)
-    self.board[y][x] = val
+    self.extend_shift(left=max(self.x0-x, 0), bottom=max(self.y0-y, 0), right=max(x-self.x0+1-self.w, 0), top=max(y-self.y0+1-self.h, 0))
+    self.shift(min(x-self.x0, 0), min(y-self.y0, 0))
+    self.board[y-self.y0][x-self.x0] = val
   def get(self, x, y):
-    if x >= self.w or y >= self.h or x < 0 or y < 0:
-      raise IndexError(f"{x},{y} out of bounds (0,0)-({self.w},{self.h})")
-    return self.board[y][x]
+    if x >= self.x0+self.w or y >= self.y0+self.h or x < self.x0 or y < self.y0:
+      raise IndexError(f"{x},{y} out of bounds: origin ({self.x0},{self.y0}), size ({self.w},{self.h})")
+    return self.board[y-self.y0][x-self.x0]
   def getP(self, x, y):
-    return P(x, y, self.board[y][x])
+    return P(x, y, self.get(x, y))
   def print(self):
-    print(f"Map (0,0)-({self.w},{self.h})")
-    for y in range(self.h-1, -1, -1):
-      print("".join([str(self.board[y][x]) for x in range(self.w)]))
+    print(f"Map origin ({self.x0},{self.y0}), size ({self.w},{self.h})")
+    for y in range(len(self.board)-1, -1, -1):
+      print("".join([str(self.board[y][x]) for x in range(len(self.board[y]))]))
   def count(self, val):
     return sum([sum([1 if x == val else 0 for x in l]) for l in self.board])
   def neighbors4(self, p):
@@ -49,8 +52,8 @@ class Board :
       n.append(self.getP(p.x, p.y+1))
     return n
   def visit(self, visitor, acc=None):
-    for x in range(self.w):
-      for y in range(self.h):
+    for x in range(self.x0, self.x0+self.w):
+      for y in range(self.y0, self.y0+self.h):
         acc = visitor(acc, x, y, self.get(x, y))
     return acc
   def copy(self):
