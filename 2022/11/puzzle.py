@@ -18,22 +18,29 @@ while inp:
   if inp:
     inp.pop(0)
 
-for round in range(20):
+def monkey_business(monkeys, rounds, worry_a_lot=False) :
+  k = 1
   for m in monkeys:
-    while m['items']:
-      m['count'] += 1
-      old = m['items'].pop(0)
-      new = eval(m['op'])
-      new = int(new / 3)
-      if new % m['div'] == 0:
-        monkeys[m['if_true']]['items'].append(new)
-      else:
-        monkeys[m['if_false']]['items'].append(new)
+      k *= m['div']
+  for round in range(rounds):
+    for m in monkeys:
+      while m['items']:
+        m['count'] += 1
+        old = m['items'].pop(0)
+        new = eval(m['op'])
+        if not worry_a_lot:
+          new = int(new / 3)
+        else:
+          new = new % k
+        if new % m['div'] == 0:
+          monkeys[m['if_true']]['items'].append(new)
+        else:
+          monkeys[m['if_false']]['items'].append(new)
+  top = sorted(monkeys, key=lambda m: m['count'])[-2:]
+  return top[0]['count'] * top[1]['count']
 
-#for i, m in enumerate(monkeys):
-#  print(f"Monkey {i}: {m['count']} - {m['items']}")
-
-top=sorted(monkeys, key=lambda m: m['count'])[-2:]
-score = top[0]['count'] * top[1]['count']
-print_res("Part one:", score, 1)
+import copy
+tmp = copy.deepcopy(monkeys)
+print_res("Part one:", monkey_business(tmp, 20), 1)
+print_res("Part two:", monkey_business(monkeys, 10000, True), 2)
 
