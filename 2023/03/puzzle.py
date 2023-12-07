@@ -51,6 +51,14 @@ for number in numbers:
       score1 += getNum(number)
       break
 
-
 print_res("Part one:", score1, 1)
-#print_res("Part two:", score2, 2)
+
+score2 = 0
+for y in range(schematic.h):
+  for x in range(schematic.w):
+    if schematic.get(x, y) == "*":
+      touching_nums = [n for n in numbers if x >= n[0]-1 and x <= n[0]+n[2] and y >= n[1]-1 and y <= n[1]+1]
+      if len(touching_nums) == 2:
+        score2 += getNum(touching_nums[0]) * getNum(touching_nums[1])
+
+print_res("Part two:", score2, 2)
