@@ -19,33 +19,17 @@ Two_pair = 5
 One_pair = 6
 High_card = 7
 
-def rules1(hand):
-  c = list(set([(c, hand.count(c)) for c in hand]))
-  if len(c) == 1:
-    return Five_of_a_kind
-  elif len(c) == 2:
-    if c[0][1] == 4 or c[1][1] == 4:
-      return Four_of_a_kind
-    else:
-      return Full_house
-  elif len(c) == 3:
-    if c[0][1] == 3 or c[1][1] == 3 or c[2][1] == 3:
-      return Three_of_a_kind
-    else:
-      return Two_pair
-  elif len(c) == 4:
-    return One_pair
-  else:
-    return High_card
 
-def rules2(hand):
-  jokers = hand.count("J")
-  hand = hand.replace("J", "")
+def rules(hand, use_jokers):
+  if use_jokers:
+    jokers = hand.count("J")
+    hand = hand.replace("J", "")
   c = list(set([(c, hand.count(c)) for c in hand]))
   c.sort(key=lambda x: x[1])
-  if jokers == 5:
-    c = [("A", 0)]
-  c[-1] = (c[-1][0], c[-1][1]+jokers)
+  if use_jokers:
+    if jokers == 5:
+      c = [("A", 0)]
+    c[-1] = (c[-1][0], c[-1][1]+jokers)
 
   if len(c) == 1:
     return Five_of_a_kind
@@ -65,9 +49,9 @@ def rules2(hand):
     return High_card
 
 
-def parse_bid(l, rules):
+def parse_bid(l, use_jokers):
   a, b = l.split()
-  return Bid(a, int(b), rules(a))
+  return Bid(a, int(b), rules(a, use_jokers))
 
 
 bids = [l for l in inputs()]
@@ -88,13 +72,14 @@ def cmp_bids(a, b, cards):
     return 0
 
 
-def score(bids, rules, cards):
-  bids = [parse_bid(bid, rules) for bid in bids]
+def score(bids, use_jokers):
+  bids = [parse_bid(bid, use_jokers) for bid in bids]
+  cards = cards2 if use_jokers else cards1
   bids = sorted(bids, key=cmp_to_key(lambda a, b: cmp_bids(a, b, cards)))
   score = 0
   for i in range(len(bids)):
     score += (i+1)*bids[i].bid
   return score
 
-print_res("Part one:", score(bids, rules1, cards1), 1)
-print_res("Part one:", score(bids, rules2, cards2), 2)
+print_res("Part one:", score(bids, False), 1)
+print_res("Part one:", score(bids, True), 2)
