@@ -36,9 +36,8 @@ class Board :
     return P(x, y, self.get(x, y))
   def print(self, flipY=False):
     print(f"Map origin ({self.x0},{self.y0}), size ({self.w},{self.h})")
-    board = self.board[::-1] if flipY else self.board
-    for y in range(len(board)-1, -1, -1):
-      print("".join([str(board[y][x]) for x in range(len(board[y]))]))
+    for y in range(len(self.board)-1, -1, -1) if flipY else range(len(self.board)):
+      print("".join([str(self.board[y][x]) for x in range(len(self.board[y]))]))
   def count(self, val):
     return sum([sum([1 if x == val else 0 for x in l]) for l in self.board])
   def neighbors4(self, p):
