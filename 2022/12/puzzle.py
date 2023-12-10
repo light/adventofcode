@@ -16,13 +16,13 @@ for y, l in enumerate(inputs()):
       E = board.getP(x, y)
 
 
-def find_next_level(board, p):
-  current_level = ord("a" if p.val == "S" else p.val)
+def find_next_level(board, p, going_down = False):
+  current_level = ord("a" if p.val == "S" else "z" if p.val == "E" else p.val)
   n = []
   def test(x, y):
     v = board.get(x, y)
-    level = ord("z" if v == "E" else v)
-    return level <= current_level + 1
+    level = ord("z" if v == "E" else "a" if v == "S" else v)
+    return level >= current_level - 1 if going_down else level <= current_level + 1
   if p.x != 0 and test(p.x-1, p.y):
     n.append(board.getP(p.x-1, p.y))
   if p.x != board.w-1 and test(p.x+1, p.y):
@@ -34,12 +34,18 @@ def find_next_level(board, p):
   return n
 
 
-path, cost = a_star(
+_, score1 = a_star(
   S,
   lambda p: [(n, 1) for n in find_next_level(board, p)],
   lambda p: p == E,
   lambda x: 0)
 
-score1 = len(path)-1
+_, score2 = a_star(
+  E,
+  lambda p: [(n, 1) for n in find_next_level(board, p, True)],
+  lambda p: p.val == "a",
+  lambda x: 0)
+
 
 print_res("Part one:", score1, 1)
+print_res("Part two:", score2, 2)
