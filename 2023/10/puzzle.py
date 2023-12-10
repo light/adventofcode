@@ -33,7 +33,7 @@ path, cost = a_star(
   start,
   lambda p: [(n, 1) for n in find_junctures(board, p)],
   lambda p: p == end,
-  lambda x: 1)
+  lambda x: 0)
 
 loop = [S] + path
 
