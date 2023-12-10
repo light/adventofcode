@@ -2,6 +2,9 @@ import sys
 import re
 import copy
 
+def cmdline_arg(idx):
+  return sys.argv[idx] if len(sys.argv) > idx else None
+
 def print_res(msg, val, exp_arg):
   expected = sys.argv[exp_arg] if len(sys.argv) > exp_arg and sys.argv[exp_arg] != "_" else None
   if expected is not None:
