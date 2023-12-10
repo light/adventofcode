@@ -35,6 +35,25 @@ path, cost = a_star(
   lambda p: p == end,
   lambda x: 1)
 
-score1 = int((len(path)+1)/2)
+loop = [S] + path
+
+score1 = int((len(loop))/2)
+
+# From : https://math.stackexchange.com/questions/3009826/area-of-a-simple-closed-curve
+# From : https://fr.wikipedia.org/wiki/Th%C3%A9or%C3%A8me_de_Green
+
+def area(loop):
+  l = len(loop)
+  s = 0
+  for i in range(l):
+    p1, p2 = loop[i], loop[(i+1)%l]
+    s += p1.x*p2.y-p2.x*p1.y
+  a = s / 2 # Area from center of cells
+  return int(abs(a) - (l-2)/2) # "Heuristically" determined correction ...
+
+assert 0 == area([P(1, 1), P(2, 1), P(2, 2), P(1, 2)])
+assert 0 == area([P(1, 1), P(2, 1), P(2, 2), P(2, 3), P(1, 3), P(1, 2)])
+assert 0 == area([P(1, 1), P(2, 1), P(3, 1), P(4, 1), P(4, 2), P(3, 2), P(2, 2), P(2, 3), P(3, 3), P(4, 3), P(4, 4), P(3, 4), P(2, 4), P(1, 4), P(1, 3), P(1, 2)])
 
 print_res("Part one:", score1, 1)
+print_res("Part two:", area(loop), 2)
