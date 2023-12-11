@@ -1,6 +1,7 @@
 #!/usr/bin/env -S PYTHONPATH=../../util python3
 
 from util import *
+from functools import cmp_to_key
 
 pairs = []
 inp = inputs()
@@ -38,5 +39,14 @@ for i, p in enumerate(pairs):
   if compare(*p) <= 0:
     score1 += i+1
 
-
 print_res("Part one:", score1, 1)
+
+
+key1 = [[2]]
+key2 = [[6]]
+
+packets = [i for pair in pairs for i in pair] + [key1, key2]
+packets = sorted(packets, key=cmp_to_key(lambda a, b: compare(a, b)))
+score2 = (packets.index(key1)+1)*(packets.index(key2)+1)
+
+print_res("Part two:", score2, 2)
