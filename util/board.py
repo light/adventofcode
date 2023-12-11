@@ -73,7 +73,7 @@ class Board :
   def copy(self):
     n = Board()
     n.board = [[v for v in l] for l in self.board]
-    n.ø = self.ø; n.w = self.w; n.h = self.h
+    n.ø = self.ø; n.w = self.w; n.h = self.h; n.x0 = self.x0; n.y0 = self.y0
     return n
   def _null_items(self, n):
     return [self.ø() for i in range(n)] if callable(self.ø) else [self.ø]*n

@@ -34,7 +34,7 @@ pour_point = cave.getP(500, 0)
 cave.extend_shift(left = 1, right = 1); cave.shift(-1, 0)
 cave.print()
 
-def drop_sand():
+def drop_sand(cave):
   x, y = pour_point.x, pour_point.y
   while y < ymax:
     if cave.get(x, y+1) == ".":
@@ -47,19 +47,31 @@ def drop_sand():
       x += 1
     else:
       cave.set(x, y, "o")
-      return
+      return (x, y)
   return "abyss"
 
 def drop_max_sand():
+  tmp_cave = cave.copy();
   count = 0
   while True:
-    res = drop_sand()
+    res = drop_sand(tmp_cave)
     if res == "abyss":
       break
     count += 1
-  cave.print()
+    if res == (pour_point.x, pour_point.y):
+      break
+  tmp_cave.print()
   return count
 
 score1 = drop_max_sand()
 print_res("Part one:", score1, 1)
 
+
+for i in range(ymax+2+2):
+  cave.set(500-i, ymax+2, "#")
+  cave.set(500+i, ymax+2, "#")
+ymax += 2
+
+score2 = drop_max_sand()
+
+print_res("Part two:", score2, 2)
