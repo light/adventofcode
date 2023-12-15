@@ -46,6 +46,12 @@ class Board :
   def get(self, x, y):
     self._check_bounds(x, y)
     return self.board[y-self.y0][x-self.x0]
+  def getCol(self, x):
+    self._check_bounds(x, self.y0)
+    return [self.board[y-self.y0][x-self.x0] for y in range(self.h)]
+  def getRow(self, y):
+    self._check_bounds(self.x0, y)
+    return [self.board[y-self.y0][x-self.x0] for x in range(self.w)]
   def getP(self, x, y):
     return P(x, y, self.get(x, y))
   def print(self, flipY=False):
