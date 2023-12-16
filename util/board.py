@@ -76,6 +76,8 @@ class Board :
       for y in range(self.y0, self.y0+self.h):
         acc = visitor(acc, x, y, self.get(x, y))
     return acc
+  def is_inside(self, x, y):
+    return x >= self.x0 and x < self.x0+self.w and y >= self.y0 and y < self.y0+self.h
   def copy(self):
     n = Board()
     n.board = [[v for v in l] for l in self.board]
@@ -84,7 +86,7 @@ class Board :
   def _null_items(self, n):
     return [self.ø() for i in range(n)] if callable(self.ø) else [self.ø]*n
   def _check_bounds(self, x, y):
-    if x >= self.x0+self.w or y >= self.y0+self.h or x < self.x0 or y < self.y0:
+    if not self.is_inside(x, y):
       raise IndexError(f"{x},{y} out of bounds: origin ({self.x0},{self.y0}), size ({self.w},{self.h})")
   def __eq__(s, o):
     return isinstance(o, s.__class__) and s.ø == o.ø and s.board == o.board
