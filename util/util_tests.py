@@ -116,5 +116,38 @@ class TestBoard(unittest.TestCase):
     self.assertEqual(board.y0, -1)
     self.assertEqual(board.get(1, -1), '#')
 
+from geom import Segment
+
+class TestGeomSegment(unittest.TestCase):
+  def test_segment_equals(self):
+    s = Segment(10, 20)
+    o = Segment(10, 20)
+    self.assertTrue(s == o)
+    self.assertEqual(s, o)
+  def test_segment_length(self):
+    s = Segment(10, 20)
+    self.assertEqual(s.length(), 11)
+  def test_segment_sub_outside_left(self):
+    s = Segment(10, 20)
+    self.assertEqual(s.sub(Segment(0, 5)), [s])
+  def test_segment_sub_outside_right(self):
+    s = Segment(10, 20)
+    self.assertEqual(s.sub(Segment(25, 30)), [s])
+  def test_segment_sub_overlap_left(self):
+    s = Segment(10, 20)
+    self.assertEqual(s.sub(Segment(0, 15)), [Segment(16, 20)])
+  def test_segment_sub_overlap_right(self):
+    s = Segment(10, 20)
+    self.assertEqual(s.sub(Segment(15, 25)), [Segment(10, 14)])
+  def test_segment_sub_inside(self):
+    s = Segment(10, 20)
+    self.assertEqual(s.sub(Segment(13, 17)), [Segment(10, 12), Segment(18, 20)])
+  def test_segment_sub_equals(self):
+    s = Segment(10, 20)
+    self.assertEqual(s.sub(Segment(10, 20)), [])
+  def test_segment_sub_larger(self):
+    s = Segment(10, 20)
+    self.assertEqual(s.sub(Segment(5, 25)), [])
+
 if __name__ == '__main__':
     unittest.main()
