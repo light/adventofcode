@@ -71,6 +71,17 @@ class Board :
     if p.y != self.h-1:
       n.append(self.getP(p.x, p.y+1))
     return n
+  def neighbors8(self, p):
+    n = self.neighbors4(p)
+    if p.x != 0 and p.y != 0:
+      n.append(self.getP(p.x-1, p.y-1))
+    if p.x != self.w-1 and p.y != 0:
+      n.append(self.getP(p.x+1, p.y-1))
+    if p.x != self.w-1 and p.y != self.h-1:
+      n.append(self.getP(p.x+1, p.y+1))
+    if p.x != 0 and p.y != self.h-1:
+      n.append(self.getP(p.x-1, p.y+1))
+    return n
   def visit(self, visitor, acc=None):
     for x in range(self.x0, self.x0+self.w):
       for y in range(self.y0, self.y0+self.h):
